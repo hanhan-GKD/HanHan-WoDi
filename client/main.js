@@ -135,7 +135,6 @@ const main = async () => {
                 for (const item of obj.data.clientArr) {
                     nameStr += item.name + ","
                 }
-                console.log("CLIENT_SOCKET.room_num:", CLIENT_SOCKET.room_num, "obj.data.room_num:", obj.data.home_num)
                 CLIENT_SOCKET.room_num = obj.data.home_num
                 console.log(`当前玩家:[${nameStr}]，等待其他玩家进入...`)
                 break;
