@@ -24,6 +24,7 @@ const server = net.createServer(function (client_sock) {
         let r = rooms.find(s => s.home_num == home_num)
         if (r) {
             if (ip == r.home_ip) {
+                r.clientArr = r.clientArr.filter(s => s.ipStr != ip)
                 for (const item of r.clientArr) {
                     let socket = clinet_cons.find(s => s.id == item.id)
                     if (socket) {
