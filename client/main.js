@@ -163,10 +163,9 @@ const main = async () => {
             case "t_end":
                 break;
             case "game_end":
+                console.log(obj.msg)
                 if (CLIENT_SOCKET.home_ip == obj.data.room.home_ip) {
                     await Process("is_start")
-                } else {
-                    console.log(obj.msg)
                 }
                 break;
             case "out":
