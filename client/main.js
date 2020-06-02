@@ -10,6 +10,11 @@ let CLIENT_SOCKET = {
 const config = require('../config/index.json')
 const Process = async (str) => {
     switch (str) {
+        case "a":
+            CLIENT_SOCKET.con.write(JSON.stringify({
+                com: "a"
+            }))
+            break;
         case "c":
             console.log(`——————————————————————————————————————————————`)
             console.log(`请严格按照示例格式录入玩家人数`)
@@ -97,7 +102,7 @@ const main = async () => {
         CLIENT_SOCKET.con = server
         console.log("连接成功...", config.client)
         console.log(`——————————————————————————————————————————————`)
-        console.log(`————创建房间[c],加入房间[i]————`)
+        console.log(`————创建房间[c],加入房间[i],房间列表[a]————`)
         console.log(`——————————————————————————————————————————————`)
         str = await com.readSyncByRl("请输入:")
 
@@ -106,6 +111,20 @@ const main = async () => {
     server.on("data", async function (buf) {
         let obj = JSON.parse(buf)
         switch (obj.com) {
+            case "a_ok":
+                if (obj.data) {
+                    for (const item of obj.data) {
+                        console.log(`房间号:${item.home_num},人数:${item.total}/${item.p_num}`)
+                    }
+                }else{
+                    console.log('暂无房间...')
+                }
+                console.log(`——————————————————————————————————————————————`)
+                console.log(`————创建房间[c],加入房间[i],房间列表[a]————`)
+                console.log(`——————————————————————————————————————————————`)
+                str = await com.readSyncByRl("请输入:")
+                await Process(str)
+                break;
             case "c_ok":
                 console.log(`创建房间成功，房间号:${obj.data.home_num}，等待其他玩家进入...`)
                 CLIENT_SOCKET.room_num = obj.data.home_num

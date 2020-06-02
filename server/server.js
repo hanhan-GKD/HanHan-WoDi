@@ -16,6 +16,7 @@ let clinet_cons = []
 const RAND = require('../share/random')
 const config = require('../config/index.json').server
 const server = net.createServer(function (client_sock) {
+    console.log(client_sock.remoteAddress + ":" + client_sock.remotePort, "连接成功...")
     client_sock.on("close", function () {
         let home_ip = client_sock.remoteAddress + ":" + client_sock.remotePort
         let r = rooms.find(s => s.home_ip == home_ip)
@@ -28,17 +29,23 @@ const server = net.createServer(function (client_sock) {
                 }
             }
         }
-        console.log(rooms.length, home_ip)
         rooms = rooms.filter(s => s.home_ip != home_ip)
+        console.log(home_ip, "断开连接...剩余房间数:", rooms.length)
     });
     client_sock.on("data", function (data) {
         let ipStr = client_sock.remoteAddress + ":" + client_sock.remotePort
         let obj = JSON.parse(data);
-        console.log(obj)
         let idStr;
         let room, exists_con;
-
         switch (obj.com) {
+            case "a":
+                client_sock.write(JSON.stringify({
+                    com: "a_ok",
+                    data: rooms.map(s => {
+                        return { home_num: s.home_num, total: s.total, p_num: s.players.length }
+                    })
+                }))
+                break;
             case "c":
                 let group = {};
                 let id = obj.data.name + 1
