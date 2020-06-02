@@ -7,6 +7,15 @@ let CLIENT_SOCKET = {
     room_num: 0,
     home_ip: null
 };
+const IdentityEmun = {
+    PM: "平民",
+    WD: "卧底",
+    BB: "白板"
+}
+const ClientStatusEmun = {
+    DIE: "出局",
+    LIVE: "存活"
+}
 const config = require('../config/index.json')
 const Process = async (str) => {
     switch (str) {
@@ -164,6 +173,9 @@ const main = async () => {
                 break;
             case "game_end":
                 console.log(obj.msg)
+                for (const item of obj.data.room.clientArr) {
+                    console.log(`【${item.name}】:${IdentityEmun[item.identity]},${ClientStatusEmun[item.status]}`)
+                }
                 if (CLIENT_SOCKET.home_ip == obj.data.room.home_ip) {
                     await Process("is_start")
                 }
