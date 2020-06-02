@@ -116,7 +116,7 @@ const main = async () => {
                     for (const item of obj.data) {
                         console.log(`房间号:${item.home_num},人数:${item.total}/${item.p_num}`)
                     }
-                }else{
+                } else {
                     console.log('暂无房间...')
                 }
                 console.log(`——————————————————————————————————————————————`)

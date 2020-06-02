@@ -25,7 +25,7 @@ const server = net.createServer(function (client_sock) {
                 let socket = clinet_cons.find(s => s.id == item.id)
                 if (socket) {
                     console.log("关闭连接...")
-                    socket.client_con.end();
+                    socket.client_con.write(JSON.stringify({ com: "room_close", msg: "房主退出游戏..." }))
                 }
             }
         }
@@ -81,11 +81,11 @@ const server = net.createServer(function (client_sock) {
             case "i":
                 let result = rooms.find(s => s.home_num == obj.data.num)
                 if (!result) {
-                    client_sock.write(JSON.stringify({ com: "err", data: "没有找到该房间!" }))
+                    client_sock.write(JSON.stringify({ com: "err", msg: "没有找到该房间!" }))
                     return
                 }
                 if (result.total == result.clientArr.length) {
-                    client_sock.write(JSON.stringify({ com: "err", data: "该房间人数已满!" }))
+                    client_sock.write(JSON.stringify({ com: "err", msg: "该房间人数已满!" }))
                     return
                 }
 
@@ -176,6 +176,7 @@ const server = net.createServer(function (client_sock) {
                         be_vote_player.is_die = true;
                         be_vote_player.is_vote = true;
                         be_vote_player.is_speak = true;
+                        be_vote_player.status = ClientStatusEmun.DIE
                         let b_i = IdentityArr.indexOf(be_vote_player.identity)
                         room.players[b_i]--
                         if (room.players[0] <= room.players[1] && room.players[0] <= 1) {//卧底胜利
