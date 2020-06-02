@@ -44,7 +44,7 @@ const server = net.createServer(function (client_sock) {
             }
 
         }
-        rooms = rooms.filter(s => s.home_ip != home_ip)
+        rooms = rooms.filter(s => s.home_ip != ip)
         console.log(home_ip, "断开连接...剩余房间数:", rooms.length)
     });
     client_sock.on("data", function (data) {
