@@ -166,6 +166,15 @@ const main = async () => {
                     console.log(obj.msg)
                 }
                 break;
+            case "out":
+                console.log(obj.msg)
+                nameStr = ""
+                for (const item of obj.data.clientArr) {
+                    nameStr += item.name + ","
+                }
+                CLIENT_SOCKET.room_num = obj.data.home_num
+                console.log(`当前玩家:[${nameStr}]，等待其他玩家进入...`)
+                break;
             case "err":
                 console.log(obj.msg)
                 let err = await com.readSyncByRl("请重新输入:")

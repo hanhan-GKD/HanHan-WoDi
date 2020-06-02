@@ -8,26 +8,41 @@ const IdentityEmun = {
 const WORDS = require('../config/words.json')
 const IdentityArr = ["PM", "WD", "BB"]
 const ClientStatusEmun = {
-    DIE: "死亡",
+    DIE: "出局",
     LIVE: "存活"
 }
 let rooms = []
 let clinet_cons = []
+let player_info = {}
 const RAND = require('../share/random')
 const config = require('../config/index.json').server
 const server = net.createServer(function (client_sock) {
     console.log(client_sock.remoteAddress + ":" + client_sock.remotePort, "连接成功...")
     client_sock.on("close", function () {
-        let home_ip = client_sock.remoteAddress + ":" + client_sock.remotePort
-        let r = rooms.find(s => s.home_ip == home_ip)
+        let ip = client_sock.remoteAddress + ":" + client_sock.remotePort
+        let home_num = player_info[ip]
+        let r = rooms.find(s => s.home_num == home_num)
         if (r) {
-            for (const item of r.clientArr) {
-                let socket = clinet_cons.find(s => s.id == item.id)
-                if (socket) {
-                    console.log("关闭连接...")
-                    socket.client_con.write(JSON.stringify({ com: "room_close", msg: "房主退出游戏..." }))
+            if (ip == r.home_ip) {
+                for (const item of r.clientArr) {
+                    let socket = clinet_cons.find(s => s.id == item.id)
+                    if (socket) {
+                        console.log("关闭连接1...")
+                        socket.client_con.write(JSON.stringify({ com: "room_close", msg: "房主退出游戏..." }))
+                    }
+                }
+            } else {
+                let out_player = r.clientArr.find(s => s.ipStr == ip)
+                r.clientArr = r.clientArr.filter(s => s.ipStr != ip)
+                for (const item of r.clientArr) {
+                    let socket = clinet_cons.find(s => s.id == item.id)
+                    if (socket) {
+                        console.log("关闭连接2...")
+                        socket.client_con.write(JSON.stringify({ com: "out", data: r, msg: `${out_player.name}退出房间...` }))
+                    }
                 }
             }
+
         }
         rooms = rooms.filter(s => s.home_ip != home_ip)
         console.log(home_ip, "断开连接...剩余房间数:", rooms.length)
@@ -58,9 +73,11 @@ const server = net.createServer(function (client_sock) {
                     is_die: false,
                     vote_num: 0
                 }]
+                let home_num = rooms.length + 1;
+                player_info[ipStr] = home_num
                 group.home_ip = ipStr
                 group.home_id = id
-                group.home_num = rooms.length + 1
+                group.home_num = home_num
                 group.players = obj.data.players
                 group.total = ~~obj.data.players[0] + ~~obj.data.players[1] + ~~obj.data.players[2]
                 let json = JSON.stringify({ com: "c_ok", data: group })
@@ -109,6 +126,7 @@ const server = net.createServer(function (client_sock) {
                     is_die: false,
                     vote_num: 0
                 })
+                player_info[ipStr] = result.home_num
                 //人数不满
                 if (result.clientArr.length < result.total) {
                     for (const item of result.clientArr) {

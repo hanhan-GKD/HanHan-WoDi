@@ -6,7 +6,8 @@ const readSyncByRl = tips => {
             input: process.stdin,
             output: process.stdout
         });
-        rl.question(tips, (answer) => {
+        console.log(tips)
+        rl.question("", (answer) => {
             rl.close();
             resolve(answer.trim());
         });
