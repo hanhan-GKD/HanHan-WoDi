@@ -135,14 +135,14 @@ const server = net.createServer(function (client_sock) {
                     }
                     //满人开启
                 } else {
-                    let rand = new RAND();
-                    rand.init(result.players)
+                    result.rand = new RAND();
+                    result.rand.init(result.players)
                     let i_num = 1;
                     let r = ~~(Math.random() * WORDS.length)
                     let word = WORDS[r]
                     result.word = word
                     for (let item of result.clientArr) {
-                        let index = rand.rand();
+                        let index = result.rand.rand();
                         item.identity = IdentityArr[index]
                         item.status = ClientStatusEmun.LIVE
                         item.speaks = []
@@ -231,14 +231,13 @@ const server = net.createServer(function (client_sock) {
                 break;
             case "r":
                 room = rooms.find(s => s.home_num == obj.data.room_num)
-                let rand = new RAND();
-                rand.init(room.players)
+                room.rand.init(room.players)
                 let i_num = 1;
                 let r = ~~(Math.random() * WORDS.length)
                 let word = WORDS[r]
                 room.word = word
                 for (let item of room.clientArr) {
-                    let index = rand.rand();
+                    let index = room.rand.rand();
                     item.identity = IdentityArr[index]
                     item.status = ClientStatusEmun.LIVE
                     item.speaks = []
