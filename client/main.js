@@ -7,7 +7,7 @@ let CLIENT_SOCKET = {
     room_num: 0,
     home_ip: null
 };
-const config = require('../config/index.json')
+const config = require('../config/index.json').client
 const Process = async (str) => {
     switch (str) {
         case "c":

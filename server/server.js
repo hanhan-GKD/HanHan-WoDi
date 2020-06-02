@@ -14,7 +14,7 @@ const ClientStatusEmun = {
 let rooms = []
 let clinet_cons = []
 const RAND = require('../share/random')
-const config = require('../config/index.json')
+const config = require('../config/index.json').server
 const server = net.createServer(function (client_sock) {
     client_sock.on("close", function () {
         let home_ip = client_sock.remoteAddress + ":" + client_sock.remotePort
