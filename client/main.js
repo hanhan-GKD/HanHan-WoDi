@@ -7,7 +7,7 @@ let CLIENT_SOCKET = {
     room_num: 0,
     home_ip: null
 };
-const config = require('../config/index.json').client
+const config = require('../config/index.json')
 const Process = async (str) => {
     switch (str) {
         case "c":
@@ -93,9 +93,9 @@ const main = async () => {
     let str = await com.readSyncByRl("请输入入局昵称:")
     // console.log('欢迎来到《憨憨卧底》-命令行版')
     CLIENT_SOCKET.client_name = str + ""
-    const server = net.connect(config.server, async () => {
+    const server = net.connect(config.client, async () => {
         CLIENT_SOCKET.con = server
-        console.log("连接成功...", config.server)
+        console.log("连接成功...", config.client)
         console.log(`——————————————————————————————————————————————`)
         console.log(`————创建房间[c],加入房间[i]————`)
         console.log(`——————————————————————————————————————————————`)
