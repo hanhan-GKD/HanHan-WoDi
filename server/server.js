@@ -5,7 +5,7 @@ const IdentityEmun = {
     WD: "卧底",
     BB: "白板"
 }
-const WORDS = require('./words.json')
+const WORDS = require('../config/words.json')
 const IdentityArr = ["PM", "WD", "BB"]
 const ClientStatusEmun = {
     DIE: "死亡",
