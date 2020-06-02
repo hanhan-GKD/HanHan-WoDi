@@ -72,6 +72,9 @@ const Process = async (str) => {
                 }
             }))
             break;
+        case "t_ok":
+            console.log(obj.msg)
+            break;
         case "is_start":
             str = await com.readSyncByRl(`是否继续？请输入r或e,r:继续,e:退出...`)
             if (["r", "e"].includes(str)) {
