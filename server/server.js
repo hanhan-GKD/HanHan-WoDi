@@ -45,15 +45,16 @@ const server = net.createServer(function (client_sock) {
                     }
                 }
             } else {
-                let out_player_name = r.clientArr.find(s => s.ip == ip).name
+                let out_player = r.clientArr.find(s => s.ip == ip)
                 r.clientArr = r.clientArr.filter(s => s.ip != ip)
                 let names = r.clientArr.map(s => { return `【${s.name}】` })
                 for (const item of r.clientArr) {
                     let socket = clinet_cons.find(s => s.id == item.id)
                     if (socket) {
+                        let out_str = out_player ? `玩家【${out_player.name}】退出房间` : "有玩家退出房间"
                         socket.client_con.write(JSON.stringify({
                             com: "out",
-                            msg: `房间号:${r.home_num},人数:${r.clientArr.length}/${r.total}玩家【${out_player_name}】退出房间，剩余玩家${names.join(",")}，等待其他玩家加入..`
+                            msg: `房间号:${r.home_num},人数:${r.clientArr.length}/${r.total}，${out_str},剩余玩家${names.join(",")}，等待其他玩家加入..`
                         }))
                     }
                 }
