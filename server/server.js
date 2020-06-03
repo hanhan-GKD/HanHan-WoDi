@@ -1,4 +1,17 @@
-// 将net模块 引入进来
+console.log([
+    "",
+    "",
+    "《憨憨卧底》-命令行版",
+    "",
+    "||   ||  ||   ||  ||       ||         ||  ||||",
+    "||   ||  ||   ||   ||     || ||      ||   ||  ||",
+    "|||||||  |||||||    ||   ||   ||    ||    ||   ||",
+    "||   ||  ||   ||     || ||      || ||     ||  ||",
+    "||   ||  ||   ||      |||        ||       ||||",
+    "",
+    "GITHUB:https://github.com/hanhan-GKD/HanHan-WoDi",
+
+].join('\n'));
 const net = require("net");
 const IdentityEmun = {
     PM: "平民",
@@ -8,7 +21,7 @@ const IdentityEmun = {
 const WORDS = require('../config/words.json')
 const IdentityArr = ["PM", "WD", "BB"]
 const ClientStatusEmun = {
-    DIE: "出局",
+    DIE: "淘汰",
     LIVE: "存活"
 }
 let rooms = []
@@ -24,29 +37,31 @@ const server = net.createServer(function (client_sock) {
         let r = rooms.find(s => s.home_num == home_num)
         if (r) {
             if (ip == r.home_ip) {
-                r.clientArr = r.clientArr.filter(s => s.ipStr != ip)
+                r.clientArr = r.clientArr.filter(s => s.ip != ip)
                 for (const item of r.clientArr) {
                     let socket = clinet_cons.find(s => s.id == item.id)
                     if (socket) {
-                        console.log("关闭连接1...")
                         socket.client_con.write(JSON.stringify({ com: "room_close", msg: "房主退出游戏..." }))
                     }
                 }
             } else {
-                let out_player = r.clientArr.find(s => s.ipStr == ip)
-                r.clientArr = r.clientArr.filter(s => s.ipStr != ip)
+                let out_player_name = r.clientArr.find(s => s.ip == ip).name
+                r.clientArr = r.clientArr.filter(s => s.ip != ip)
+                let names = r.clientArr.map(s => { return `【${s.name}】` })
                 for (const item of r.clientArr) {
                     let socket = clinet_cons.find(s => s.id == item.id)
                     if (socket) {
-                        console.log("关闭连接2...")
-                        socket.client_con.write(JSON.stringify({ com: "out", data: r, msg: `${out_player.name}退出房间...` }))
+                        socket.client_con.write(JSON.stringify({
+                            com: "out",
+                            msg: `房间号:${r.home_num},人数:${r.clientArr.length}/${r.total}玩家【${out_player_name}】退出房间，剩余玩家${names.join(",")}，等待其他玩家加入..`
+                        }))
                     }
                 }
             }
-
+            clinet_cons = clinet_cons.filter(s => s.ip != ip)
         }
         rooms = rooms.filter(s => s.home_ip != ip)
-        console.log(home_ip, "断开连接...剩余房间数:", rooms.length)
+        console.log(ip, "断开连接...剩余房间数:", rooms.length)
     });
     client_sock.on("data", function (data) {
         let ipStr = client_sock.remoteAddress + ":" + client_sock.remotePort
@@ -58,7 +73,7 @@ const server = net.createServer(function (client_sock) {
                 client_sock.write(JSON.stringify({
                     com: "a_ok",
                     data: rooms.map(s => {
-                        return { home_num: s.home_num, total: s.total, p_num: s.players.length }
+                        return { home_num: s.home_num, total: s.total, p_num: s.clientArr.length }
                     })
                 }))
                 break;
@@ -184,7 +199,7 @@ const server = net.createServer(function (client_sock) {
                     my.is_speak = false
                     let names = room.clientArr.filter(s => !s.is_vote).map(c => `【${c.name}】`)
                     let json = JSON.stringify({ com: "t_ok", msg: `请等待${names.join(",")}投票...` })
-                    for (const item of room.clientArr) {
+                    for (const item of room.clientArr.filter(s => s.is_vote)) {
                         let socket = clinet_cons.find(s => s.id == item.id)
                         socket.client_con.write(json)
                     }
@@ -248,7 +263,12 @@ const server = net.createServer(function (client_sock) {
                 let player = room.clientArr.find(s => s.identity != "BB")
                 for (const item of room.clientArr) {
                     let socket = clinet_cons.find(s => s.id == item.id)
-                    socket.client_con.write(JSON.stringify({ com: "s_ok", data: { speak: player, room: room }, msg: `请玩家【${player.name}】开始发言...` }))
+                    socket.client_con.write(JSON.stringify({
+                        com: "s_ok", data: { speak: player, room: room }, msg: `
+                    房主选择继续游戏...
+                    ————————————————————————————————
+                    请玩家【${player.name}】开始发言...`
+                    }))
                 }
                 break;
             case "e":

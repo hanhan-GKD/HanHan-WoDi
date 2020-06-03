@@ -1,3 +1,17 @@
+console.log([
+    "",
+    "",
+    "欢迎来到《憨憨卧底》-命令行版",
+    "",
+    "||   ||  ||   ||  ||       ||         ||  ||||",
+    "||   ||  ||   ||   ||     || ||      ||   ||  ||",
+    "|||||||  |||||||    ||   ||   ||    ||    ||   ||",
+    "||   ||  ||   ||     || ||      || ||     ||  ||",
+    "||   ||  ||   ||      |||        ||       ||||",
+    "",
+    "GITHUB:https://github.com/hanhan-GKD/HanHan-WoDi",
+
+].join('\n'));
 const com = require('./com')
 const net = require('net');
 let CLIENT_SOCKET = {
@@ -81,7 +95,7 @@ const Process = async (str) => {
             console.log(obj.msg)
             break;
         case "is_start":
-            str = await com.readSyncByRl(`是否继续？请输入r或e,r:继续,e:退出...`)
+            str = await com.readSyncByRl(`是否继续？r:继续,e:退出`)
             if (["r", "e"].includes(str)) {
                 CLIENT_SOCKET.con.write(JSON.stringify({
                     com: str,
@@ -104,7 +118,6 @@ const Process = async (str) => {
 
 const main = async () => {
     let str = await com.readSyncByRl("请输入入局昵称:")
-    // console.log('欢迎来到《憨憨卧底》-命令行版')
     CLIENT_SOCKET.client_name = str + ""
     const server = net.connect(config.client, async () => {
         CLIENT_SOCKET.con = server
@@ -122,7 +135,7 @@ const main = async () => {
             case "a_ok":
                 if (obj.data) {
                     for (const item of obj.data) {
-                        console.log(`房间号:${item.home_num},人数:${item.total}/${item.p_num}`)
+                        console.log(`房间号:${item.home_num},人数:${item.p_num}/${item.total}`)
                     }
                 } else {
                     console.log('暂无房间...')
@@ -165,6 +178,9 @@ const main = async () => {
             case "s_end":
                 await Process("t")
                 break;
+            case "t_ok":
+                console.log(obj.msg)
+                break;
             case "t_end":
                 break;
             case "game_end":
@@ -178,12 +194,15 @@ const main = async () => {
                 break;
             case "out":
                 console.log(obj.msg)
-                nameStr = ""
-                for (const item of obj.data.clientArr) {
-                    nameStr += item.name + ","
-                }
-                CLIENT_SOCKET.room_num = obj.data.home_num
-                console.log(`当前玩家:[${nameStr}]，等待其他玩家进入...`)
+                // CLIENT_SOCKET.room_num = obj.data.home_num
+                break;
+            case "e_ok":
+                console.log(obj.msg)
+                console.log(`——————————————————————————————————————————————`)
+                console.log(`————创建房间[c],加入房间[i],房间列表[a]————`)
+                console.log(`——————————————————————————————————————————————`)
+                str = await com.readSyncByRl("请输入:")
+                await Process(str)
                 break;
             case "err":
                 console.log(obj.msg)
