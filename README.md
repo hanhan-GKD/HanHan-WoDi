@@ -29,8 +29,4 @@
 
 ### 游戏截图
 
-<img src="./img/1591153855414.jpg" height='200'>
-
-<img src="./img/1591153855414.jpg" height='200'>
-
-<img src="./img/1591154123181.jpg" height='200'>
+<img src="./img/1591153855414.jpg" height='200'><img src="./img/1591154123181.jpg" height='200'>
