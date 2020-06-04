@@ -117,7 +117,12 @@ const Process = async (str) => {
 }
 
 const main = async () => {
-    let str = await com.readSyncByRl("请输入入局昵称:")
+    let str = await com.readSyncByRl("请输入4位以为入局昵称:")
+    if (str.length > 4) {
+        console.log("名称过长，请重新输入！")
+        main()
+        return
+    }
     CLIENT_SOCKET.client_name = str + ""
     const server = net.connect(config.client, async () => {
         CLIENT_SOCKET.con = server
@@ -130,7 +135,6 @@ const main = async () => {
         await Process(str)
     })
     server.on("data", async function (buf) {
-   
         let obj = JSON.parse(buf)
         switch (obj.com) {
             case "a_ok":

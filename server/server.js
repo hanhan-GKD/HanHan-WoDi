@@ -206,6 +206,7 @@ const server = net.createServer(function (client_sock) {
                         let socket = clinet_cons.find(s => s.id == item.id)
                         socket.client_con.write(json)
                     }
+                    //找到没投票的玩家
                     let exists_no_vote = room.clientArr.find(s => !s.is_vote)
                     if (!exists_no_vote) {
                         room.clientArr.sort((x, y) => { return y.vote_num - x.vote_num })
@@ -213,22 +214,25 @@ const server = net.createServer(function (client_sock) {
                         be_vote_player.is_die = true;
                         be_vote_player.is_vote = true;
                         be_vote_player.is_speak = true;
+                        be_vote_player.vote_num = 0;
                         be_vote_player.status = ClientStatusEmun.DIE
                         let b_i = IdentityArr.indexOf(be_vote_player.identity)
                         room.players[b_i]--
                         if (room.players[0] <= room.players[1] && room.players[0] <= 1) {//卧底胜利
+                            let diePlayers = room.clientArr.filter(s => s.is_die)
                             let json = JSON.stringify({
                                 com: "game_end",
-                                data: { room: room }, msg: `【${be_vote_player.name}】出局，卧底胜利，等待房主开启...`
+                                data: { room: room }, msg: `${diePlayers.map(s => { return `【${s.name}】` })}出局，卧底胜利，等待房主开启...`
                             })
                             for (const item of room.clientArr) {
                                 let socket = clinet_cons.find(s => s.id == item.id)
                                 socket.client_con.write(json)
                             }
                         } else if (room.players[1] <= 0 && room.players[2] <= 0) { //平民胜利
+                            let diePlayers = room.clientArr.filter(s => s.is_die)
                             let json = JSON.stringify({
                                 com: "game_end",
-                                data: { room: room }, msg: `【${be_vote_player.name}】出局，平民胜利，等待房主开启...`
+                                data: { room: room }, msg: `${diePlayers.map(s => { return `【${s.name}】` })}出局，平民胜利，等待房主开启...`
                             })
                             for (const item of room.clientArr) {
                                 let socket = clinet_cons.find(s => s.id == item.id)
@@ -236,7 +240,9 @@ const server = net.createServer(function (client_sock) {
                             }
                         } else {//继续
                             let speak_player = room.clientArr.find(s => !s.is_speak)
-                            for (const item of room.clientArr) {
+                            for (let item of room.clientArr) {
+                                item.vote_num = 0
+                                item.is_vote = false
                                 let socket = clinet_cons.find(s => s.id == item.id)
                                 socket.client_con.write(JSON.stringify({
                                     com: "s_ok",
