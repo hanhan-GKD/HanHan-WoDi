@@ -132,12 +132,13 @@ const main = async () => {
     const server = net.connect(config.client, async () => {
         CLIENT_SOCKET.con = server
         console.log("连接成功...", config.client)
-        str = await com.readSyncByRl("请输入:")
         menuConsole()
+        str = await com.readSyncByRl("请输入:")
         await Process(str)
     })
     server.on("data", async function (buf) {
         let obj = JSON.parse(buf)
+        console.log(`———————————————分割线———————————————`)
         switch (obj.com) {
             case "a_ok":
                 if (obj.data) {

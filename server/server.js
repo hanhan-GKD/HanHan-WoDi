@@ -96,6 +96,7 @@ const server = net.createServer(function (client_sock) {
                 group.home_id = id
                 group.home_num = home_num
                 group.players = obj.data.players
+                group.initPlayers = [...obj.data.players]
                 group.total = ~~obj.data.players[0] + ~~obj.data.players[1] + ~~obj.data.players[2]
                 let json = JSON.stringify({ com: "c_ok", data: group })
                 client_sock.write(json)
@@ -155,7 +156,7 @@ const server = net.createServer(function (client_sock) {
                     //满人开启
                 } else {
                     result.rand = new RAND();
-                    result.rand.init(result.players)
+                    result.rand.init(result.initPlayers)
                     let i_num = 1;
                     let r = ~~(Math.random() * WORDS.length)
                     let word = WORDS[r]
@@ -226,7 +227,7 @@ const server = net.createServer(function (client_sock) {
                             let diePlayers = room.clientArr.filter(s => s.is_die)
                             let json = JSON.stringify({
                                 com: "game_end",
-                                data: { room: room }, msg: `${diePlayers.map(s => { return `【${s.name}】` })}出局，卧底胜利，等待房主开启...`
+                                data: { room: room, t_end: true }, msg: `${diePlayers.map(s => { return `【${s.name}】` })}出局，卧底胜利，等待房主开启...`
                             })
                             for (const item of room.clientArr) {
                                 let socket = clinet_cons.find(s => s.id == item.id)
@@ -236,7 +237,7 @@ const server = net.createServer(function (client_sock) {
                             let diePlayers = room.clientArr.filter(s => s.is_die)
                             let json = JSON.stringify({
                                 com: "game_end",
-                                data: { room: room }, msg: `${diePlayers.map(s => { return `【${s.name}】` })}出局，平民胜利，等待房主开启...`
+                                data: { room: room, t_end: true }, msg: `${diePlayers.map(s => { return `【${s.name}】` })}出局，平民胜利，等待房主开启...`
                             })
                             for (const item of room.clientArr) {
                                 let socket = clinet_cons.find(s => s.id == item.id)
@@ -254,22 +255,29 @@ const server = net.createServer(function (client_sock) {
                                 }))
                             }
                         }
+                        for (let item of room.clientArr) {
+                            item.vote_num = 0
+                        }
                     }
                 }
                 break;
             case "r":
                 room = rooms.find(s => s.home_num == obj.data.room_num)
-                room.rand.init(room.players)
+                room.rand.init([...room.initPlayers])
+                room.players = [...room.initPlayers]
                 let i_num = 1;
                 let r = ~~(Math.random() * WORDS.length)
                 let word = WORDS[r]
                 room.word = word
+
                 for (let item of room.clientArr) {
                     let index = room.rand.rand();
                     item.identity = IdentityArr[index]
                     item.status = ClientStatusEmun.LIVE
                     item.speaks = []
                     item.num = i_num
+                    item.vote_num = 0
+                    item.is_die = true
                     i_num++
                 }
                 let player = room.clientArr.find(s => s.identity != "BB")
