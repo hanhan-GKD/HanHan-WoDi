@@ -236,7 +236,8 @@ const server = net.createServer(function (client_sock) {
                             let speak_player = room.clientArr.find(s => !s.is_speak)
                             let json_t = JSON.stringify({
                                 com: "s_ok",
-                                data: { t_end: true, speak: speak_player, room: room }, msg: `【${be_vote_player.name}】出局，请玩家【${speak_player.name}】开始发言...`
+                                data: { t_end: true, speak: speak_player, room: room },
+                                msg: `【${be_vote_player.name}】出局，请玩家【${speak_player.name}】开始发言...`
                             })
                             for (const item of room.clientArr) {
                                 let socket = clinet_cons.find(s => s.id == item.id)

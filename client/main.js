@@ -15,7 +15,7 @@ console.log([
 const com = require('./com')
 const net = require('net');
 let CLIENT_SOCKET = {
-    client_name: "",
+    client_nams_oke: "",
     con: null,
     room_id: null,
     room_num: 0,
@@ -162,7 +162,7 @@ const main = async () => {
             case "s_ok":
             case "s_end":
                 for (const item of obj.data.room.clientArr) {
-                    if (obj.t_end)
+                    if (obj.data.t_end)
                         console.log(`${item.num}-号,【${item.name}】:`, item.speaks, `票数:${item.vote_num}`)
                     else
                         console.log(`${item.num}-号,【${item.name}】:`, item.speaks)
