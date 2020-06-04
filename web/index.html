@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>憨憨卧底web版</title>
+    <style>
+        .dn {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <div id="name-d" class="dn ds">
+            请输入入局名称:
+            <input type="text" name="name" id="name">
+            <input type="button" value="确认" onclick="subNameFunc()">
+        </div>
+        <div id="menu-d" class="dn ds">
+            ————创建房间[c],加入房间[i],房间列表[a]————
+            <br>
+            <input type="text" name="menu" id="menu">
+            <input type="button" value="确认" onclick="subMenuFunc()">
+        </div>
+        <div id="create-room" class="dn ds">
+            ——————————————————————————————————————————————
+            <br>
+            请严格按照示例格式录入玩家人数
+            <br>
+            示例:3,2,0
+            <br>
+            3则代表3个平民，2则是2个卧底，0代表0个白板
+            <br>
+            ——————————————————————————————————————————————
+            <br>
+            <input type="text" name="menu" id="create-players">
+            <input type="button" value="确认" onclick="subCreateRoomFunc()">
+
+        </div>
+    </div>
+</body>
+<script>
+    var showEle = function (id) {
+        document.getElementById(id).style = "display:inherit;"
+    }
+    var noneEle = function (id) {
+        document.getElementById(id).style = "display:none;"
+    }
+    var getELeVal = function (id) {
+        return document.getElementById(id).value
+    }
+    var hName = localStorage.getItem("name")
+    if (!hName) {//首次需要名称
+        showEle('name-d')
+    } else {
+        showEle('menu-d')
+    }
+    var subNameFunc = function () {
+        localStorage.setItem("name", getELeVal("name"))
+        noneEle('name-d')
+    }
+    var subMenuFunc = function () {
+        var p = getELeVal("menu")
+        if (p == "c") {
+            noneEle("menu-d")
+            showEle("create-room")
+        } else if (p == "i") {
+            
+        } else if (p == "a") {
+
+        } else {
+            alert('输入错误，请重新输入！')
+        }
+    }
+</script>
+
+</html>
