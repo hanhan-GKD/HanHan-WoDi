@@ -130,6 +130,7 @@ const main = async () => {
         await Process(str)
     })
     server.on("data", async function (buf) {
+   
         let obj = JSON.parse(buf)
         switch (obj.com) {
             case "a_ok":

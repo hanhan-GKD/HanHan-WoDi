@@ -148,7 +148,9 @@ const server = net.createServer(function (client_sock) {
                 if (result.clientArr.length < result.total) {
                     for (const item of result.clientArr) {
                         let socket = clinet_cons.find(s => s.id == item.id)
-                        socket.client_con.write(JSON.stringify({ com: "i_ok", data: result }))
+                        if (socket && socket.client_con) {
+                            socket.client_con.write(JSON.stringify({ com: "i_ok", data: result }))
+                        }
                     }
                     //满人开启
                 } else {
@@ -234,14 +236,13 @@ const server = net.createServer(function (client_sock) {
                             }
                         } else {//继续
                             let speak_player = room.clientArr.find(s => !s.is_speak)
-                            let json_t = JSON.stringify({
-                                com: "s_ok",
-                                data: { t_end: true, speak: speak_player, room: room },
-                                msg: `【${be_vote_player.name}】出局，请玩家【${speak_player.name}】开始发言...`
-                            })
                             for (const item of room.clientArr) {
                                 let socket = clinet_cons.find(s => s.id == item.id)
-                                socket.client_con.write(json_t)
+                                socket.client_con.write(JSON.stringify({
+                                    com: "s_ok",
+                                    data: { t_end: true, speak: speak_player, room: room },
+                                    msg: `【${be_vote_player.name}】出局，请玩家【${speak_player.name}】开始发言...`
+                                }))
                             }
                         }
                     }
