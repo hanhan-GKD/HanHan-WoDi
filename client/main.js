@@ -115,6 +115,11 @@ const Process = async (str) => {
             break;
     }
 }
+const menuConsole = () => {
+    console.log(`——————————————————————————————————————————————`)
+    console.log(`—————创建房间[c],加入房间[i],房间列表[a]—————`)
+    console.log(`——————————————————————————————————————————————`)
+}
 
 const main = async () => {
     let str = await com.readSyncByRl("请输入4位以为入局昵称:")
@@ -127,11 +132,8 @@ const main = async () => {
     const server = net.connect(config.client, async () => {
         CLIENT_SOCKET.con = server
         console.log("连接成功...", config.client)
-        console.log(`——————————————————————————————————————————————`)
-        console.log(`————创建房间[c],加入房间[i],房间列表[a]————`)
-        console.log(`——————————————————————————————————————————————`)
         str = await com.readSyncByRl("请输入:")
-
+        menuConsole()
         await Process(str)
     })
     server.on("data", async function (buf) {
@@ -145,9 +147,7 @@ const main = async () => {
                 } else {
                     console.log('暂无房间...')
                 }
-                console.log(`——————————————————————————————————————————————`)
-                console.log(`————创建房间[c],加入房间[i],房间列表[a]————`)
-                console.log(`——————————————————————————————————————————————`)
+                menuConsole()
                 str = await com.readSyncByRl("请输入:")
                 await Process(str)
                 break;
@@ -204,9 +204,7 @@ const main = async () => {
             case "room_close":
             case "e_ok":
                 console.log(obj.msg)
-                console.log(`——————————————————————————————————————————————`)
-                console.log(`————创建房间[c],加入房间[i],房间列表[a]————`)
-                console.log(`——————————————————————————————————————————————`)
+                menuConsole()
                 str = await com.readSyncByRl("请输入:")
                 await Process(str)
                 break;
