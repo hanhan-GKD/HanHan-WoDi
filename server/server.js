@@ -243,7 +243,6 @@ const server = net.createServer(function (client_sock) {
                                 socket.client_con.write(json)
                             }
                         } else {//继续
-                            console.log("=================================================继续")
                             let speak_player = room.clientArr.find(s => !s.is_speak)
                             for (let item of room.clientArr) {
                                 item.is_vote = false
