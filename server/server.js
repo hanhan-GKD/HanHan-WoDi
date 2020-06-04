@@ -198,7 +198,7 @@ const server = net.createServer(function (client_sock) {
                     let my = room.clientArr.find(s => s.ip == ipStr)
                     let vote_player = room.clientArr.find(s => s.num == obj.data.num)
                     if (vote_player) {
-                        vote_player.vote_num += 1
+                        my.vote_num += 1
                     }
                     my.is_vote = true
                     my.is_speak = false
