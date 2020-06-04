@@ -197,7 +197,9 @@ const server = net.createServer(function (client_sock) {
                 if (room) {
                     let my = room.clientArr.find(s => s.ip == ipStr)
                     let vote_player = room.clientArr.find(s => s.num == obj.data.num)
-                    vote_player.vote_num += 1
+                    if (vote_player) {
+                        vote_player.vote_num += 1
+                    }
                     my.is_vote = true
                     my.is_speak = false
                     let names = room.clientArr.filter(s => !s.is_vote).map(c => `【${c.name}】`)
@@ -239,9 +241,9 @@ const server = net.createServer(function (client_sock) {
                                 socket.client_con.write(json)
                             }
                         } else {//继续
+                            console.log("=================================================继续")
                             let speak_player = room.clientArr.find(s => !s.is_speak)
                             for (let item of room.clientArr) {
-                                item.vote_num = 0
                                 item.is_vote = false
                                 let socket = clinet_cons.find(s => s.id == item.id)
                                 socket.client_con.write(JSON.stringify({
