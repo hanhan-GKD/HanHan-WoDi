@@ -130,7 +130,6 @@ const main = async () => {
         await Process(str)
     })
     server.on("data", async function (buf) {
-        console.log("============>", buf)
         let obj = JSON.parse(buf)
         switch (obj.com) {
             case "a_ok":
@@ -197,6 +196,7 @@ const main = async () => {
                 console.log(obj.msg)
                 // CLIENT_SOCKET.room_num = obj.data.home_num
                 break;
+            case "room_close":
             case "e_ok":
                 console.log(obj.msg)
                 console.log(`——————————————————————————————————————————————`)
