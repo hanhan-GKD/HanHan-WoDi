@@ -122,12 +122,13 @@ const menuConsole = () => {
 }
 
 const main = async () => {
-    let str = await com.readSyncByRl("请输入4位以为入局昵称:")
+    let str = await com.readSyncByRl("请输入【4位以为字母数字】入局昵称:")
     if (str.length > 4) {
         console.log("名称过长，请重新输入！")
         main()
         return
     }
+    str = "".toUpperCase
     CLIENT_SOCKET.client_name = str + ""
     const server = net.connect(config.client, async () => {
         CLIENT_SOCKET.con = server
