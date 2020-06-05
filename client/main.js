@@ -128,7 +128,7 @@ const main = async () => {
         main()
         return
     }
-    str = "".toUpperCase
+    str = str.toLocaleLowerCase();
     CLIENT_SOCKET.client_name = str + ""
     const server = net.connect(config.client, async () => {
         CLIENT_SOCKET.con = server
