@@ -193,7 +193,7 @@ const main = async () => {
             case "game_end":
                 console.log(obj.msg)
                 for (const item of obj.data.room.clientArr) {
-                    console.log(`【${item.name}】:${IdentityEmun[item.identity]},${item.status}`)
+                    console.log(`【${item.name}】:${IdentityEmun[item.identity]},${item.status},词语:${obj.data.room.word[item.identity]}`)
                 }
                 if (CLIENT_SOCKET.home_ip == obj.data.room.home_ip) {
                     await Process("is_start")
