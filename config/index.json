@@ -4,7 +4,7 @@
         "port": 3888
     },
     "client": {
-        "host": "0.0.0.0",
+        "host": "joucks.cn",
         "port": 3888
     }
 }
