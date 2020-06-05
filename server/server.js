@@ -281,7 +281,9 @@ const server = net.createServer(function (client_sock) {
                         item.speaks = []
                         item.num = i_num
                         item.vote_num = 0
-                        item.is_die = true
+                        item.is_vote = false
+                        item.is_speak = false
+                        item.is_die = false
                         i_num++
                     }
                     let player = room.clientArr.find(s => s.identity != "BB")
